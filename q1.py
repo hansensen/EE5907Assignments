@@ -35,15 +35,17 @@ def getNbClassifier(xtrain, ytrain):
 		else:
 			spam.append(vector)
 
+def getPredictions(classifier, xtest):
+
+
 def main():
 	# Load data from spamData.mat
 	xtrain, ytrain, xtest, ytest = loadData('./spamData.mat')
 
 	# Get classifier
 	naiveBayesClassifier = getNbClassifier(xtrain, ytrain)
-	# prepare model
-	summaries = summarizeByClass(trainingSet)
+
 	# test model
-	predictions = getPredictions(summaries, testSet)
-	accuracy = getAccuracy(testSet, predictions)
+	predictions = getPredictions(summaries, xtest)
+	accuracy = getAccuracy(ytest, predictions)
 	print('Accuracy: {0}%').format(accuracy)
