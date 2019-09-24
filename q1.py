@@ -34,18 +34,35 @@ def getNbClassifier(xtrain, ytrain):
 			nonspam.append(vector)
 		else:
 			spam.append(vector)
+	spam = np.array(spam).astype(int)
+	nonspam = np.array(nonspam).astype(int)
+	# calculate Xcj matrix
+	numFeatures = spam.shape[1]
+	print('Feauture Number: ', numFeatures)
+	x = np.zeros((2, numFeatures)).astype(int)
+	x[0] = np.sum(spam, axis=0)
+	x[1] = np.sum(nonspam, axis=0)
+	print(x[0])
+	print(x[1])
+	return x
+
 
 def getPredictions(classifier, xtest):
+	return
 
 
 def main():
 	# Load data from spamData.mat
 	xtrain, ytrain, xtest, ytest = loadData('./spamData.mat')
+	xtrain = binarization(xtrain)
+	xtest = binarization(xtest)
 
 	# Get classifier
 	naiveBayesClassifier = getNbClassifier(xtrain, ytrain)
 
 	# test model
-	predictions = getPredictions(summaries, xtest)
-	accuracy = getAccuracy(ytest, predictions)
-	print('Accuracy: {0}%').format(accuracy)
+	# predictions = getPredictions(summaries, xtest)
+	# accuracy = getAccuracy(ytest, predictions)
+	# print('Accuracy: {0}%').format(accuracy)
+
+main()
