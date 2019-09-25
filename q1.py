@@ -1,7 +1,7 @@
 import scipy.io as sio
 import numpy as np
 from sklearn import preprocessing
-
+import DataLoader as dl
 
 def loadData(fileName):
 	mat = sio.loadmat(fileName)
@@ -53,7 +53,8 @@ def getPredictions(classifier, xtest):
 
 def main():
 	# Load data from spamData.mat
-	xtrain, ytrain, xtest, ytest = loadData('./spamData.mat')
+	xtrain, ytrain, xtest, ytest = dl.loadData()
+	print(xtrain)
 	xtrain = binarization(xtrain)
 	xtest = binarization(xtest)
 
