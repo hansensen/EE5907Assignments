@@ -46,18 +46,16 @@ def getNbClassifier(xtrain, ytrain):
 	print(x[1])
 	return x
 
-
 def getPredictions(classifier, xtest):
 	return
-
 
 def main():
 	# Load data from spamData.mat
 	xtrain, ytrain, xtest, ytest = dl.loadData()
-	print(xtrain)
 	xtrain = binarization(xtrain)
 	xtest = binarization(xtest)
 
+	print(xtrain)
 	# Get classifier
 	naiveBayesClassifier = getNbClassifier(xtrain, ytrain)
 
