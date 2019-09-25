@@ -1,8 +1,7 @@
 import scipy.io as scio
 import numpy as np
 
-def loadData():
-    fileName = "spamData.mat"
+def loadData(fileName):
     data = scio.loadmat(fileName)
     xtest = data['Xtest']
     xtrain = data['Xtrain']
