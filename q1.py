@@ -58,7 +58,6 @@ def getPredictions(classifier, xtest):
 xtrain, ytrain, xtest, ytest = dl.loadData('spamData.mat')
 xtrain = binarization(xtrain)
 xtest = binarization(xtest)
-print(xtrain)
 
 
 # In[3]:
@@ -73,7 +72,6 @@ naiveBayesClassifier = getNbClassifier(xtrain, ytrain)
 
 # Get Maximum Likelihood Estimation of lambda
 lambdaMl, N1, N = getLambdaML(ytrain)
-print(getLambdaML(ytrain))
 
 
 # In[5]:
@@ -84,28 +82,16 @@ alphaStart = 0
 alphaEnd = 100
 alphaStepSize = 0.5
 alphaArr = np.arange(alphaStart, alphaEnd + alphaStepSize, alphaStepSize)
-print(alphaArr)
 
 
-# In[6]:
+# In[14]:
 
 
 # Initialise an array of error rate
-errRate = np.zeros(alphaArr.size)
-print(alphaArr.size)
+errRate = np.zeros(alphaArr.shape[0])
 
 
-# In[7]:
-
-
-print('featureVector', xtest[0])
-featureVector = xtest[0]
-#print(calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVector))
-range(featureVector.shape[0])
-featureVector.shape[0]
-
-
-# In[8]:
+# In[15]:
 
 
 def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVector):
@@ -128,7 +114,7 @@ def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVe
 		#print('n1: ', n1, 'N: ', N1)
 		#print('prior: ', prior)
 		if prior == 0:
-			prior = 0.00000001
+			prior = 0.00000001;
 		#print('logP_yTilde', logP_yTilde[0])
 		logP_yTilde[0] += math.log(prior)
         
@@ -144,7 +130,7 @@ def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVe
 		prior = (n1 + alpha)/((N - N1) + 2* alpha)
 		#print('prior: ', prior)
 		if prior == 0:
-			prior = 0.00000001
+			prior = 0.00000001;
 		logP_yTilde[1] += math.log(prior)
 	#print('logP_yTilde_0',logP_yTilde[0])
 	#print('logP_yTilde_1',logP_yTilde[1])
@@ -155,16 +141,11 @@ def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVe
     
 
 
-# In[9]:
+# In[16]:
 
 
-xtest.shape[0]
-
-
-# In[ ]:
-
-
-for alpha in np.nditer(alphaArr):
+for j in range(alphaArr.shape[0]):
+	alpha = alphaArr[j]
 	print('alpha: ', alpha)
 	predictedRes = np.zeros(xtest.shape[0])
 	for i in range(xtest.shape[0]):
@@ -173,11 +154,16 @@ for alpha in np.nditer(alphaArr):
 		#print('predicted: ', predictedRes[i])
 	predictedRes = predictedRes.astype(int)
 	ytest = ytest.flatten().astype(int)
-	error = np.mean( predictedRes != ytest )
-	print(error)
+	errRate[j] = np.mean( predictedRes != ytest )
+	print(errRate[j])
 
 
-# In[ ]:
+# In[19]:
+
+
+import matplotlib.pyplot as plt
+
 plt.figure()
-plt.plot(betaAParaList, correctRateList)
+plt.plot(alphaArr, errRate)
 plt.show()
+
