@@ -77,7 +77,7 @@ gaussianNaiveBayesClassifier = getGaussianNbClassifier(xtrain, ytrain)
 # Get error rate on training data
 predictedTrainY = calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest)
 errRateTrain = getErrorRate(predictedTrainY, ytrain)
-print('Error Rate on Training Data: ', errRateTain)
+print('Error Rate on Training Data: ', errRateTrain)
 
 # Get error rate on test data
 predictedTestY = calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest)
