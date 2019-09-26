@@ -9,6 +9,7 @@ import numpy as np
 from sklearn import preprocessing
 import DataLoader as dl
 import math
+import matplotlib.pyplot as plot
 
 # Binarization preprocessing
 def binarization(a):
@@ -160,10 +161,10 @@ for j in range(alphaArr.shape[0]):
 
 # In[19]:
 
-
-import matplotlib.pyplot as plt
-
-plt.figure()
-plt.plot(alphaArr, errRate)
-plt.show()
+plot.figure()
+plot.plot(alphaArr, errRate)
+plot.title('Q1: Beta-binomial Naive Bayes')
+plot.xlabel('alpha')
+plot.ylabel('error rate')
+plot.show()
 
