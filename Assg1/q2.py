@@ -17,6 +17,8 @@ import math
 import matplotlib.pyplot as plot
 import scipy.stats as sst
 
+np.seterr(divide='ignore')
+
 #%%
 # Load data from spamData.mat
 xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
@@ -29,11 +31,11 @@ xtest = np.log(xtest + 0.1)
 def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
     # Get ML Estimation of mu, variance and lambda
     lambdaMl, _N1, _N = du.getLambdaML(ytrain)
-    print('lambdaMl: ', lambdaMl)
+    # print('lambdaMl: ', lambdaMl)
 
     # Get an array of unique classes, C
     classes = [0, 1]
-    print('classes: ', classes)
+    # print('classes: ', classes)
 
     # Init logP(y = c | x, D) array, index being c
     logP = []
@@ -55,7 +57,7 @@ def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
         mu, var = du.getMuVarMl(xtrainClassI)
 
         # Get log of P(xTildej | xi <-c,j, yTilde = c)
-        logPxTilde = np.log(sst.norm(mu, np.sqrt(var)).pdf(xtest) + 0.000000001)
+        logPxTilde = np.log(sst.norm(mu, np.sqrt(var)).pdf(xtest))
 
         # print('logP: ', logPyTildeI + np.sum(logPxTilde, axis = 1))
         # print(logP)
@@ -78,10 +80,9 @@ def getErrorRate(predictedRes, yActual):
 #%%
 # Get error rate on training data
 posteriorProdictiveDist = calcPosteriorProdictiveDist(xtrain, ytrain, xtrain)
-print(posteriorProdictiveDist[0:1])
-print(ytrain[0:1])
+# print('posteriorProdictiveDist ', posteriorProdictiveDist)
 predictedTrainY = getPredictions(posteriorProdictiveDist)
-print('predictedTrainY',predictedTrainY)
+#print('predictedTrainY',predictedTrainY)
 errRateTrain = getErrorRate(predictedTrainY, ytrain)
 print('Error Rate on Training Data: ', errRateTrain)
 
