@@ -16,7 +16,6 @@ import DataUtil as du
 import math
 import matplotlib.pyplot as plot
 
-
 #%%
 # Load data from spamData.mat
 xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
@@ -25,16 +24,18 @@ xtrain = np.log(xtrain + 0.00001)
 xtest = np.log(xtest + 0.00001)
 
 #%%
-# Compute Maximum Likelihood Estimation of lambda
-def getMl(data):
-    mu = np.sum(data, axis = 0) / len(data)
-    variance = np.sum((data - mu) ** 2, axis = 0) / len(data)
-    return mu, variance
-
-
-#%%
     
 def getGaussianNbClassifier(xtrain, ytrain):
+    # Get ML Estimation of mu, variance and lambda
+    mu, var = du.getMuVarMl(xtrain)
+    lambdaMl = du.getLambdaML(xtrain)
+    print('muMl: ', mu)
+    print('varMl: ', var)
+    print('lambdaMl: ', lambdaMl)
+
+    # Get an array of unique classes, C
+    classes = np.unique(ytrain)
+    print('classes: ', classes)
     # Separate xtrain by class/label
     spam = []
     nonspam = []
@@ -58,37 +59,29 @@ def getPredictions(classifier, xtest):
 
 
 #%%
-# Compute Maximum Likelihood Estimation of mean and variance with given training data
-mu, var = getMl(xtrain)
-print('muMl: ', mu)
-print('varMl: ', var)
+def calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest):
+    return np.array()
+    
+
+#%%
+def getErrorRate(predictedRes, yActual):
+    predictedRes = predictedRes.astype(int)
+    yActual = yActual.flatten().astype(int)
+    return np.mean( predictedRes != yActual )
 
 #%%
 # Get classifier
 gaussianNaiveBayesClassifier = getGaussianNbClassifier(xtrain, ytrain)
 
 #%%
-def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVector):
-    if logP_yTilde[0] > logP_yTilde[1]:
-        return 0
-    else:
-        return 1
-    
+# Get error rate on training data
+predictedTrainY = calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest)
+errRateTrain = getErrorRate(predictedTrainY, ytrain)
+print('Error Rate on Training Data: ', errRateTain)
 
-#%%
-
-# Set hyperparameters
-#alpha = alphaArr[j]
-#print('alpha: ', alpha)
-hyperParam = []
-predictedRes = np.zeros(len(xtest))
-for i in range(xtest.shape[0]):
-    featureVector = xtest[i]
-    predictedRes[i] = calcPosteriorProdictiveDist(hyperParam, gaussianNaiveBayesClassifier, mu, var, featureVector)
-    #print('predicted: ', predictedRes[i])
-predictedRes = predictedRes.astype(int)
-ytest = ytest.flatten().astype(int)
-errRate = np.mean( predictedRes != ytest )
-print(errRate)
+# Get error rate on test data
+predictedTestY = calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest)
+errRateTest = getErrorRate(predictedTestY, ytest)
+print('Error Rate on Test Data: ', errRateTest)
 
 
