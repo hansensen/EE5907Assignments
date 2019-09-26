@@ -7,26 +7,19 @@
 import scipy.io as sio
 import numpy as np
 from sklearn import preprocessing
-import DataLoader as dl
+import DataUtil as du
 import math
 import matplotlib.pyplot as plot
 
-# Binarization preprocessing
-def binarization(a):
-	binarizer = preprocessing.Binarizer().fit(a)
-	return binarizer.transform(a)
-
 # Compute Maximum Likelihood Estimation of lambda
 def getLambdaML(data):
-	a = np.array(data)
-	unique, counts = np.unique(a, return_counts=True)
-	labels = dict(zip(unique, counts))
+	N1 = np.sum(data, axis = 0)
+	N = len(data)
 	# ML Estimate of lambda = N1/N
-	lambdaMl = labels[1]/(labels[0]+labels[1])
-	return lambdaMl, labels[0], labels[1]+labels[0]
+	lambdaMl = N1 / N
+	return lambdaMl, N1, N
 
 def getNbClassifier(xtrain, ytrain):
-	# lambdaMl = getLambdaML(ytrain)
 	# Separate xtrain by class/label
 	spam = []
 	nonspam = []
@@ -56,10 +49,9 @@ def getPredictions(classifier, xtest):
 
 
 # Load data from spamData.mat
-xtrain, ytrain, xtest, ytest = dl.loadData('spamData.mat')
-xtrain = binarization(xtrain)
-xtest = binarization(xtest)
-
+xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
+xtrain = du.binarization(xtrain)
+xtest = du.binarization(xtest)
 
 # In[3]:
 
