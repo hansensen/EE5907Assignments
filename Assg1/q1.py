@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
+#%%
 import scipy.io as sio
 import numpy as np
 from sklearn import preprocessing
@@ -37,31 +35,24 @@ def getPredictions(classifier, xtest):
 	return
 
 
-# In[2]:
-
-
+#%%
 # Load data from spamData.mat
 xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
 xtrain = du.binarization(xtrain)
 xtest = du.binarization(xtest)
 
-# In[3]:
-
+#%%
 
 # Get classifier
 naiveBayesClassifier = getNbClassifier(xtrain, ytrain)
 
 
-# In[4]:
-
-
+#%%
 # Get Maximum Likelihood Estimation of lambda
 lambdaMl, N1, N = du.getLambdaML(ytrain)
 
 
-# In[5]:
-
-
+#%%
 # Create an array of alpha values, from 0 to 100 with step size 0.5
 alphaStart = 0
 alphaEnd = 100
@@ -69,15 +60,12 @@ alphaStepSize = 0.5
 alphaArr = np.arange(alphaStart, alphaEnd + alphaStepSize, alphaStepSize)
 
 
-# In[6]:
-
-
+#%%
 # Initialise an array of error rate
 errRate = np.zeros(alphaArr.shape[0])
 
 
-# In[7]:
-
+#%%
 
 def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVector):
 	# Initialise
@@ -115,7 +103,7 @@ def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVe
 		prior = (n1 + alpha)/((N - N1) + 2* alpha)
 		#print('prior: ', prior)
 		if prior == 0:
-			prior = 0.00000001
+			prior = 0.1
 		logP_yTilde[1] += math.log(prior)
 	#print('logP_yTilde_0',logP_yTilde[0])
 	#print('logP_yTilde_1',logP_yTilde[1])
@@ -126,8 +114,7 @@ def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVe
     
 
 
-# In[8]:
-
+#%%
 
 for j in range(alphaArr.shape[0]):
 	alpha = alphaArr[j]
@@ -142,7 +129,7 @@ for j in range(alphaArr.shape[0]):
 	errRate[j] = np.mean( predictedRes != ytest )
 	print(errRate[j])
 
-# In[9]:
+#%%
 
 # Plot graph: alpha vs error rate
 plot.figure()
