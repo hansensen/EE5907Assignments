@@ -11,14 +11,6 @@ import DataUtil as du
 import math
 import matplotlib.pyplot as plot
 
-# Compute Maximum Likelihood Estimation of lambda
-def getLambdaML(data):
-	N1 = np.sum(data, axis = 0)
-	N = len(data)
-	# ML Estimate of lambda = N1/N
-	lambdaMl = N1 / N
-	return lambdaMl, N1, N
-
 def getNbClassifier(xtrain, ytrain):
 	# Separate xtrain by class/label
 	spam = []
