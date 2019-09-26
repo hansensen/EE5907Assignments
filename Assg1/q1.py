@@ -85,14 +85,14 @@ alphaStepSize = 0.5
 alphaArr = np.arange(alphaStart, alphaEnd + alphaStepSize, alphaStepSize)
 
 
-# In[14]:
+# In[6]:
 
 
 # Initialise an array of error rate
 errRate = np.zeros(alphaArr.shape[0])
 
 
-# In[15]:
+# In[7]:
 
 
 def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVector):
@@ -142,7 +142,7 @@ def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVe
     
 
 
-# In[16]:
+# In[8]:
 
 
 for j in range(alphaArr.shape[0]):
@@ -158,8 +158,9 @@ for j in range(alphaArr.shape[0]):
 	errRate[j] = np.mean( predictedRes != ytest )
 	print(errRate[j])
 
-# In[19]:
+# In[9]:
 
+# Plot graph: alpha vs error rate
 plot.figure()
 plot.plot(alphaArr, errRate)
 plot.title('Q1: Beta-binomial Naive Bayes')
@@ -167,4 +168,3 @@ plot.xlabel('alpha')
 plot.ylabel('error rate')
 plot.show()
 
-#%%
