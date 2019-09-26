@@ -12,14 +12,14 @@ except:
 #%%
 import scipy.io as sio
 import numpy as np
-import DataLoader as dl
+import DataUtil as du
 import math
 import matplotlib.pyplot as plot
 
 
 #%%
 # Load data from spamData.mat
-xtrain, ytrain, xtest, ytest = dl.loadData('spamData.mat')
+xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
 # Log-transformation
 xtrain = np.log(xtrain + 0.00001)
 xtest = np.log(xtest + 0.00001)
