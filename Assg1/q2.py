@@ -15,6 +15,7 @@ import numpy as np
 import DataUtil as du
 import math
 import matplotlib.pyplot as plot
+import scipy.stats
 
 #%%
 # Load data from spamData.mat
@@ -36,27 +37,26 @@ def getGaussianNbClassifier(xtrain, ytrain):
     # Get an array of unique classes, C
     classes = np.unique(ytrain)
     print('classes: ', classes)
-    # Separate xtrain by class/label
-    spam = []
-    nonspam = []
-    for i in range(len(xtrain)):
-        vector = xtrain[i]
-        if ytrain[i] == 0:
-            nonspam.append(vector)
+
+    # Iterate by classes 0 and 1
+    for i in range(len(classes)):
+        # First term: logP(y = i | lambdaML)
+        if classes[i]:
+            logP_yTildeI = np.log(lambdaMl)
         else:
-            spam.append(vector)
-    muSpam = np.mean(spam, axis = 0)
-    muNonspam = np.mean(nonspam, axis = 0)
-    varSpam = np.var(spam, axis=0)
-    varNonspam = np.var(nonspam, axis = 0)
-    return muSpam, muNonspam, varSpam, varNonspam
+            logP_yTildeI = np.log(1 - lambdaMl)
+
+        # Following terms: sum of logP(xTildej | xi <-c,j, yTilde = c)
+        ytrain = ytrain.flatten()
+        xClass = xtrain[ytrain == classes[i]]
+        
+    return 
 
 print(getGaussianNbClassifier(xtrain, ytrain))
 
 #%%
 def getPredictions(classifier, xtest):
     return
-
 
 #%%
 def calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest):
