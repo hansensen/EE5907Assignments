@@ -28,7 +28,7 @@ xtest = np.log(xtest + 0.1)
     
 def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
     # Get ML Estimation of mu, variance and lambda
-    lambdaMl, N1, N = du.getLambdaML(ytrain)
+    lambdaMl, _N1, _N = du.getLambdaML(ytrain)
     print('lambdaMl: ', lambdaMl)
 
     # Get an array of unique classes, C
