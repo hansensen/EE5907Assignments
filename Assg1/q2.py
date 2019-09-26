@@ -15,7 +15,7 @@ import numpy as np
 import DataUtil as du
 import math
 import matplotlib.pyplot as plot
-import scipy.stats
+import scipy.stats as sst
 
 #%%
 # Load data from spamData.mat
@@ -26,42 +26,47 @@ xtest = np.log(xtest + 0.00001)
 
 #%%
     
-def getGaussianNbClassifier(xtrain, ytrain):
+def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
     # Get ML Estimation of mu, variance and lambda
-    mu, var = du.getMuVarMl(xtrain)
-    lambdaMl = du.getLambdaML(xtrain)
-    print('muMl: ', mu)
-    print('varMl: ', var)
+    lambdaMl, N1, N = du.getLambdaML(ytrain)
     print('lambdaMl: ', lambdaMl)
 
     # Get an array of unique classes, C
-    classes = np.unique(ytrain)
+    classes = [0, 1]
     print('classes: ', classes)
 
+    # Init logP(y = c | x, D) array, index being c
+    logP = []
     # Iterate by classes 0 and 1
     for i in range(len(classes)):
         # First term: logP(y = i | lambdaML)
         if classes[i]:
-            logP_yTildeI = np.log(lambdaMl)
+            logPyTildeI = np.log(lambdaMl)
         else:
-            logP_yTildeI = np.log(1 - lambdaMl)
+            logPyTildeI = np.log(1 - lambdaMl)
 
         # Following terms: sum of logP(xTildej | xi <-c,j, yTilde = c)
         ytrain = ytrain.flatten()
-        xClass = xtrain[ytrain == classes[i]]
-        
-    return 
+        # Find all x samples with y being labeled as class i
+        xtrainClassI = xtrain[ytrain == classes[i]]
+        # From xtrainClassI data, get their mu and variance respectively
+        # mu and var are 1D arrays with size same as no. of features
+        mu, var = du.getMuVarMl(xtrainClassI)
 
-print(getGaussianNbClassifier(xtrain, ytrain))
+        # Get log of P(xTildej | xi <-c,j, yTilde = c)
+        logPxTilde = np.log(sst.norm(mu, np.sqrt(var)).pdf(xtest) + 0.000000001)
+
+        # print('logP: ', logPyTildeI + np.sum(logPxTilde, axis = 1))
+        # print(logP)
+
+        # Sum all the terms together
+        logP.append(logPyTildeI + np.sum(logPxTilde, axis = 1))
+
+    return  logP
 
 #%%
 def getPredictions(classifier, xtest):
     return
-
-#%%
-def calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest):
-    return np.array()
-    
 
 #%%
 def getErrorRate(predictedRes, yActual):
@@ -70,17 +75,13 @@ def getErrorRate(predictedRes, yActual):
     return np.mean( predictedRes != yActual )
 
 #%%
-# Get classifier
-gaussianNaiveBayesClassifier = getGaussianNbClassifier(xtrain, ytrain)
-
-#%%
 # Get error rate on training data
-predictedTrainY = calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest)
+predictedTrainY = calcPosteriorProdictiveDist(xtrain, ytrain, xtest)
 errRateTrain = getErrorRate(predictedTrainY, ytrain)
 print('Error Rate on Training Data: ', errRateTrain)
 
 # Get error rate on test data
-predictedTestY = calcPosteriorProdictiveDist(gaussianNaiveBayesClassifier, xtest)
+predictedTestY = calcPosteriorProdictiveDist(xtrain, ytrain, xtest)
 errRateTest = getErrorRate(predictedTestY, ytest)
 print('Error Rate on Test Data: ', errRateTest)
 
