@@ -21,8 +21,8 @@ import scipy.stats as sst
 # Load data from spamData.mat
 xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
 # Log-transformation
-xtrain = np.log(xtrain + 0.00001)
-xtest = np.log(xtest + 0.00001)
+xtrain = np.log(xtrain + 0.1)
+xtest = np.log(xtest + 0.1)
 
 #%%
     
@@ -37,6 +37,7 @@ def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
 
     # Init logP(y = c | x, D) array, index being c
     logP = []
+
     # Iterate by classes 0 and 1
     for i in range(len(classes)):
         # First term: logP(y = i | lambdaML)
@@ -62,11 +63,11 @@ def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
         # Sum all the terms together
         logP.append(logPyTildeI + np.sum(logPxTilde, axis = 1))
 
-    return  logP
+    return  np.array(logP).transpose()
 
 #%%
-def getPredictions(classifier, xtest):
-    return
+def getPredictions(posteriorProdictiveDist):
+    return np.argmax(posteriorProdictiveDist, axis = 1)
 
 #%%
 def getErrorRate(predictedRes, yActual):
@@ -76,13 +77,17 @@ def getErrorRate(predictedRes, yActual):
 
 #%%
 # Get error rate on training data
-predictedTrainY = calcPosteriorProdictiveDist(xtrain, ytrain, xtest)
+posteriorProdictiveDist = calcPosteriorProdictiveDist(xtrain, ytrain, xtrain)
+print(posteriorProdictiveDist[0:1])
+print(ytrain[0:1])
+predictedTrainY = getPredictions(posteriorProdictiveDist)
+print('predictedTrainY',predictedTrainY)
 errRateTrain = getErrorRate(predictedTrainY, ytrain)
 print('Error Rate on Training Data: ', errRateTrain)
 
+#%%
 # Get error rate on test data
-predictedTestY = calcPosteriorProdictiveDist(xtrain, ytrain, xtest)
+posteriorProdictiveDist = calcPosteriorProdictiveDist(xtrain, ytrain, xtest)
+predictedTestY = getPredictions(posteriorProdictiveDist)
 errRateTest = getErrorRate(predictedTestY, ytest)
 print('Error Rate on Test Data: ', errRateTest)
-
-
