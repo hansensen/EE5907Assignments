@@ -56,7 +56,7 @@ naiveBayesClassifier = getNbClassifier(xtrain, ytrain)
 
 
 # Get Maximum Likelihood Estimation of lambda
-lambdaMl, N1, N = getLambdaML(ytrain)
+lambdaMl, N1, N = du.getLambdaML(ytrain)
 
 
 # In[5]:
