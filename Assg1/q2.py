@@ -1,7 +1,7 @@
 # To add a new cell, type '#%%'
 # To add a new markdown cell, type '#%% [markdown]'
 
-#%%
+# %%
 import scipy.io as sio
 import numpy as np
 import DataUtil as du
@@ -11,18 +11,19 @@ import scipy.stats as sst
 
 np.seterr(divide='ignore')
 
-#%%
+# %%
 # Load data from spamData.mat
 xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
 # Log-transformation
 xtrain = np.log(xtrain + 0.1)
 xtest = np.log(xtest + 0.1)
 
-#%%
-    
+# %%
+
+
 def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
     # Get ML Estimation of mu, variance and lambda
-    lambdaMl, _N1, _N = du.getLambdaML(ytrain)
+    lambdaMl = du.getLambdaML(ytrain)
     # print('lambdaMl: ', lambdaMl)
 
     # Get an array of unique classes, C
@@ -55,30 +56,35 @@ def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
         # print(logP)
 
         # Sum all the terms together
-        logP.append(logPyTildeI + np.sum(logPxTilde, axis = 1))
+        logP.append(logPyTildeI + np.sum(logPxTilde, axis=1))
 
-    return  np.array(logP).transpose()
+    return np.array(logP).transpose()
 
-#%%
+# %%
+
+
 def getPredictions(posteriorProdictiveDist):
-    return np.argmax(posteriorProdictiveDist, axis = 1)
+    return np.argmax(posteriorProdictiveDist, axis=1)
 
-#%%
+# %%
+
+
 def getErrorRate(predictedRes, yActual):
     predictedRes = predictedRes.astype(int)
     yActual = yActual.flatten().astype(int)
-    return np.mean( predictedRes != yActual )
+    return np.mean(predictedRes != yActual)
 
-#%%
+
+# %%
 # Get error rate on training data
 posteriorProdictiveDist = calcPosteriorProdictiveDist(xtrain, ytrain, xtrain)
 # print('posteriorProdictiveDist ', posteriorProdictiveDist)
 predictedTrainY = getPredictions(posteriorProdictiveDist)
-#print('predictedTrainY',predictedTrainY)
+# print('predictedTrainY',predictedTrainY)
 errRateTrain = getErrorRate(predictedTrainY, ytrain)
 print('Error Rate on Training Data: ', errRateTrain)
 
-#%%
+# %%
 # Get error rate on test data
 posteriorProdictiveDist = calcPosteriorProdictiveDist(xtrain, ytrain, xtest)
 predictedTestY = getPredictions(posteriorProdictiveDist)
