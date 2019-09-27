@@ -7,7 +7,7 @@ import numpy as np
 from sklearn import preprocessing
 import DataUtil as du
 import math
-import matplotlib.pyplot as plot
+import matplotlib.pyplot as plt
 
 # %%
 
@@ -30,7 +30,7 @@ def calcPosteriorProdictiveDist(xtrain, ytrain, xtest, alpha):
             logPyTildeI = np.log(lambdaMl)
         else:
             logPyTildeI = np.log(1 - lambdaMl)
-        print('classes[i]', classes[i])
+        # print('classes[i]', classes[i])
         # Following terms: sum of logP(xTildej | xi <-c,j, yTilde = c)
         ytrain = ytrain.flatten()
         # Find all x samples with y being labeled as class i
@@ -98,11 +98,11 @@ for j in range(len(alphaArr)):
 # %%
 
 # Plot graph: alpha vs error rate
-plot.figure()
-plot.plot(alphaArr, trainErr, 'green', label='train')
-plot.plot(alphaArr, testErr, 'red', label='test')
-plot.legend()
-plot.title('Q1: Beta-binomial Naive Bayes')
-plot.xlabel('alpha')
-plot.ylabel('Error Rate')
-plot.show()
+plt.figure()
+plt.plot(alphaArr, trainErr, 'green', label='train')
+plt.plot(alphaArr, testErr, 'red', label='test')
+plt.legend()
+plt.title('Q1: Beta-binomial Naive Bayes')
+plt.xlabel('alpha')
+plt.ylabel('Error Rate')
+plt.show()
