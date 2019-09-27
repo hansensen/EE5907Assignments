@@ -23,3 +23,20 @@ xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
 # Log-transformation
 xtrain = np.log(xtrain + 0.1)
 xtest = np.log(xtest + 0.1)
+# Add bias term 1 to the start of x
+numSample = xtrain.shape[0]
+xtrainBias = np.concatenate((np.ones((numSample, 1)), xtrain), axis=1)
+numSample = xtest.shape[0]
+xtestBias = np.concatenate((np.ones((numSample, 1)), xtest), axis=1)
+
+lambdaArr = getLambda()
+
+trainErr = np.zeros(len(lambdaArr))
+testErr = np.zeros(len(lambdaArr))
+
+
+for i in range(len(lambdaArr)):
+    lam = lambdaArr[i]
+
+
+# %%
