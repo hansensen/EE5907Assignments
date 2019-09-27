@@ -84,27 +84,25 @@ testErr = np.zeros(len(alphaArr))
 
 for j in range(len(alphaArr)):
     alpha = alphaArr[j]
-    print('alpha: ', 1)
     logP = calcPosteriorProdictiveDist(xtrain, ytrain, xtrain, alpha)
     # print('logP', logP)
     err = getErrorRate(logP, ytrain)
-    print('trainErr', err)
+    # print('trainErr', err)
     trainErr[j] = err
 
     logP = calcPosteriorProdictiveDist(xtrain, ytrain, xtest, alpha)
     err = getErrorRate(logP, ytest)
-    print('testErr', err)
+    # print('testErr', err)
     testErr[j] = err
 
 # %%
 
 # Plot graph: alpha vs error rate
 plot.figure()
-plot.plot(alphaArr, trainErr)
+plot.plot(alphaArr, trainErr, 'green', label='train')
+plot.plot(alphaArr, testErr, 'red', label='test')
+plot.legend()
 plot.title('Q1: Beta-binomial Naive Bayes')
 plot.xlabel('alpha')
 plot.ylabel('Error Rate')
 plot.show()
-
-
-# %%
