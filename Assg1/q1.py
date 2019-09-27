@@ -95,6 +95,15 @@ for j in range(len(alphaArr)):
     # print('testErr', err)
     testErr[j] = err
 
+
+# %%
+# Traing and testing error rates for alpha = 1, 10, 100
+for i in [1, 10, 100]:
+    j = int(i/0.5)
+    print('alpha =', int(alphaArr[j]))
+    print('training error:', trainErr[j])
+    print('testing error:', testErr[j])
+
 # %%
 
 # Plot graph: alpha vs error rate
@@ -107,12 +116,5 @@ plt.xlabel('alpha')
 plt.ylabel('Error Rate')
 plt.show()
 
-# %%
-# Traing and testing error rates for alpha = 1, 10, 100
-for i in [1, 10, 100]:
-    j = int(i/0.5)
-    print('alpha =', int(alphaArr[j]))
-    print('training error:', trainErr[j])
-    print('testing error:', testErr[j])
 
 # %%
