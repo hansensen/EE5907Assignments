@@ -2,12 +2,9 @@
 import scipy.io as sio
 import numpy as np
 import DataUtil as du
-import math
 import matplotlib.pyplot as plot
 import scipy.stats as sst
-import math
-
-
+import matplotlib.pyplot as plt
 np.seterr(divide='ignore')
 
 
@@ -15,7 +12,7 @@ np.seterr(divide='ignore')
 
 # sigmoid function
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+    return 1 / (1 + np.exp(-x))
 
 
 # get an array of lambda
@@ -27,19 +24,19 @@ def getLambda():
 
 # get gradient of NLL(wBold) without regularisation term
 def getG(xtrainBias, wBold):
-    mu = sigmoid(np.matmul(xtrainBias, wBold))
-    G = np.matmul(xtrainBias.transpose(), (mu - ytrain))
+    mu = sigmoid(xtrainBias.dot(wBold))
+    G = xtrainBias.transpose().dot(mu - ytrain)
     return G
 
 
 # get Hession of NLL(wBold) without regularisation term
 def getH(xtrainBias, wBold):
     # S = N x N diagonal matrix, where i-th diagonal is mu_i(1 - mu_i)
-    mu = sigmoid(np.matmul(xtrainBias, wBold))
+    mu = sigmoid(xtrainBias.dot(wBold))
     S = np.diag(np.squeeze((mu * (1 - mu)), axis=1))
     # H = Xt x S x X
-    H = np.matmul(xtrainBias.transpose(), S)
-    H = np.matmul(H, xtrainBias)
+    H = xtrainBias.transpose().dot(S)
+    H = H.dot(xtrainBias)
     return H
 
 
@@ -50,7 +47,7 @@ def newtonsMethod(xtestBias, xtrainBias, lam):
     # N: # of samples
     N = len(xtrainBias)
     # D: # of features, xtrainBias has D + 1 columns due to bias term
-    D = len(xtrainBias[0] - 1)
+    D = len(xtrainBias[0]) - 1
     # Initialisation, wBold is a (D+1) x 1 vector
     wBold = np.zeros((D + 1, 1))
     diff = 999
@@ -96,5 +93,20 @@ testErr = np.zeros(len(lambdaArr))
 for i in range(len(lambdaArr)):
     lam = lambdaArr[i]
     wBold = newtonsMethod(xtestBias, xtrainBias, lam)
+    # Training
+    pSpam = -xtrainBias.dot(wBold)
+    trainErr[i] = (1 - np.sum((pSpam >= 0.5) == ytrain) / len(ytrain))
+
+    # Testing
+    pSpam = sigmoid(-xtestBias.dot(wBold))
+    testErr[i] = (1 - np.sum((pSpam >= 0.5) == ytest) / len(ytest))
+
 
 # %%
+plt.plot(lambdaArr, trainErr, "green", label="Training Set")
+plt.plot(lambdaArr, testErr, "red", label="Test Set")
+plt.xlabel("lambda")
+plt.ylabel("error rate")
+plt.title("Q3. Logistic Regression")
+plt.legend()
+plt.show()
