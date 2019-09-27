@@ -45,7 +45,7 @@ def getH(xtrainBias, wBold):
 
 # %%
 # Newton's Method, get w to minimise NLL
-def newtonsMethod(xtestBias, xtrainBias):
+def newtonsMethod(xtestBias, xtrainBias, lam):
     # Get dimensions
     # N: # of samples
     N = len(xtrainBias)
@@ -56,8 +56,14 @@ def newtonsMethod(xtestBias, xtrainBias):
     margin = 1000
     # Deploy Newton's method to obtain optimal w
     while (margin > 0.01):
-        g = getG(xtrainBias, wBold)
-        h = getH(xtrainBias, wBold)
+        # get gradient of NLLreg(wBold)
+        gReg = getG(xtrainBias, wBold) + lam * \
+            np.concatenate((np.zeros((1, 1)), wBold[1:]), axis=0)
+        # get hession of NLLreg(wBold)
+        # I is a (D+1)x(D+1) indentity matrix except top left corner is 0 instead of 1
+        I = np.identity(D + 1)
+        I[0, 0] = 0
+        hReg = getH(xtrainBias, wBold) + lam * I
     return w
 
 
@@ -81,7 +87,7 @@ testErr = np.zeros(len(lambdaArr))
 
 for i in range(len(lambdaArr)):
     lam = lambdaArr[i]
-    w = newtonsMethod(xtestBias, xtrainBias)
+    w = newtonsMethod(xtestBias, xtrainBias, lam)
 
 
 # %%
