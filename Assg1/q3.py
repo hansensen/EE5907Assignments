@@ -53,9 +53,9 @@ def newtonsMethod(xtestBias, xtrainBias, lam):
     D = len(xtrainBias[0] - 1)
     # Initialisation, wBold is a (D+1) x 1 vector
     wBold = np.zeros((D + 1, 1))
-    margin = 1000
+    diff = 999
     # Deploy Newton's method to obtain optimal w
-    while (margin > 0.01):
+    while (diff > 0.01):
         # get gradient of NLLreg(wBold)
         gReg = getG(xtrainBias, wBold) + lam * \
             np.concatenate((np.zeros((1, 1)), wBold[1:]), axis=0)
@@ -64,7 +64,15 @@ def newtonsMethod(xtestBias, xtrainBias, lam):
         I = np.identity(D + 1)
         I[0, 0] = 0
         hReg = getH(xtrainBias, wBold) + lam * I
-    return w
+
+        # Solve Hk * dk = -gk for dk
+        dk = ((np.linalg.pinv(hReg)).dot(-gReg))
+
+        # No need to use line search as lecturer mentioned during the lecture :)
+        wBold += dk
+
+        diff = np.sum(np.abs(dk))
+    return wBold
 
 
 # %%
@@ -87,7 +95,6 @@ testErr = np.zeros(len(lambdaArr))
 
 for i in range(len(lambdaArr)):
     lam = lambdaArr[i]
-    w = newtonsMethod(xtestBias, xtrainBias, lam)
-
+    wBold = newtonsMethod(xtestBias, xtrainBias, lam)
 
 # %%
