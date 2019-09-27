@@ -1,7 +1,7 @@
 # To add a new cell, type '#%%'
 # To add a new markdown cell, type '#%% [markdown]'
 
-#%%
+# %%
 import scipy.io as sio
 import numpy as np
 from sklearn import preprocessing
@@ -9,133 +9,102 @@ import DataUtil as du
 import math
 import matplotlib.pyplot as plot
 
-def getNbClassifier(xtrain, ytrain):
-    # Separate xtrain by class/label
-    spam = []
-    nonspam = []
-    for i in range(len(xtrain)):
-        vector = xtrain[i]
-        if ytrain[i] == 0:
-            nonspam.append(vector)
+# %%
+
+
+def calcPosteriorProdictiveDist(xtrain, ytrain, xtest, alpha):
+    # Get ML Estimation of lambda
+    lambdaMl = du.getLambdaML(ytrain)
+    # print('lambda', lambdaMl)
+
+    # Get an array of unique classes, C
+    classes = [0, 1]
+
+    # Init logP(y = c | x, D) array, index being c
+    logP = []
+
+    # Iterate by classes 0 and 1
+    for i in range(len(classes)):
+        # First term: logP(y = i | lambdaML)
+        if classes[i]:
+            logPyTildeI = np.log(lambdaMl)
         else:
-            spam.append(vector)
-    spam = np.array(spam).astype(int)
-    nonspam = np.array(nonspam).astype(int)
-    # calculate Xcj matrix
-    numFeatures = spam.shape[1]
-    print('Feauture Number: ', numFeatures)
-    x = np.zeros((2, numFeatures)).astype(int)
-    x[1] = np.sum(spam, axis=0)
-    x[0] = np.sum(nonspam, axis=0)
-    print(x[0])
-    print(x[1])
-    return x
+            logPyTildeI = np.log(1 - lambdaMl)
+        print('classes[i]', classes[i])
+        # Following terms: sum of logP(xTildej | xi <-c,j, yTilde = c)
+        ytrain = ytrain.flatten()
+        # Find all x samples with y being labeled as class i
+        xtrainClassI = xtrain[ytrain == classes[i]]
+        # print('x_label', xtrainClassI)
+        # From xtrainClassI data, get their n1 and n respectively
+        n1 = np.sum(xtrainClassI, axis=0)
+        n = len(xtrainClassI)
+        # print('n1', n1.shape)
+        # print('n', n)
+        # print('alpha', alpha)
+        posterior = (n1 + alpha)/(n + alpha + alpha)
+        # print('posterior', posterior)
+        logPxTilde = np.log((xtest > 0) * posterior +
+                            (xtest <= 0) * (1 - posterior))
+        # print('logPxTilde', logPxTilde)
 
-def getPredictions(classifier, xtest):
-    return
+        # Sum all the terms together
+        logP.append(logPyTildeI + np.sum(logPxTilde, axis=1))
+    return np.array(logP).transpose()
 
 
-#%%
+def getErrorRate(logP, yActual):
+    predictedRes = getPredictions(logP)
+    yActual = yActual.flatten().astype(int)
+    return np.mean(predictedRes != yActual)
+
+
+def getPredictions(logP):
+    predictedClass = np.argmax(logP, axis=1)
+    return predictedClass
+
+
+# %%
+
 # Load data from spamData.mat
 xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
 xtrain = du.binarization(xtrain)
 xtest = du.binarization(xtest)
 
-#%%
-
-# Get classifier
-naiveBayesClassifier = getNbClassifier(xtrain, ytrain)
-
-
-#%%
-# Get Maximum Likelihood Estimation of lambda
-lambdaMl, N1, N = du.getLambdaML(ytrain)
-
-
-#%%
 # Create an array of alpha values, from 0 to 100 with step size 0.5
 alphaStart = 0
 alphaEnd = 100
 alphaStepSize = 0.5
 alphaArr = np.arange(alphaStart, alphaEnd + alphaStepSize, alphaStepSize)
 
+trainErr = np.zeros(len(alphaArr))
+testErr = np.zeros(len(alphaArr))
 
-#%%
-# Initialise an array of error rate
-errRate = np.zeros(alphaArr.shape[0])
+# %%
 
-
-#%%
-
-def calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVector):
-    # Initialise
-    lambdaMlArr = np.array([1 - lambdaMl, lambdaMl])
-    logP_yTilde = np.log(lambdaMlArr)
-    #print('lambdaMlArr ',logP_yTilde)
-    
-    #print('featureVector ', featureVector)
-    #print('p(y=0):')
-
-    # Calculate  logP(yTilde = 0 | xTilde, D)
-    for i in range(featureVector.shape[0]):
-        feature = featureVector[i]
-        if (feature):
-            n1 = naiveBayesClassifier[0][i]
-        else:
-            n1 = N1 - naiveBayesClassifier[0][i]
-        prior = (n1 + alpha)/(N1 + 2* alpha)
-        #print('n1: ', n1, 'N: ', N1)
-        #print('prior: ', prior)
-        if prior == 0:
-            prior = 0.00000001
-        #print('logP_yTilde', logP_yTilde[0])
-        logP_yTilde[0] += math.log(prior)
-        
-    #print('p(y=1):')
-    # Calculate  logP(yTilde = 1 | xTilde, D)
-    for i in range(featureVector.shape[0]):
-        feature = featureVector[i]
-        if (feature):
-            n1 = naiveBayesClassifier[1][i]
-        else:
-            n1 = N - N1 - naiveBayesClassifier[1][i]
-        #print('n1: ', n1, 'N: ', N - N1)
-        prior = (n1 + alpha)/((N - N1) + 2* alpha)
-        #print('prior: ', prior)
-        if prior == 0:
-            prior = 0.1
-        logP_yTilde[1] += math.log(prior)
-    #print('logP_yTilde_0',logP_yTilde[0])
-    #print('logP_yTilde_1',logP_yTilde[1])
-    if logP_yTilde[0] > logP_yTilde[1]:
-        return 0
-    else:
-        return 1
-    
-
-
-#%%
-
-for j in range(alphaArr.shape[0]):
+for j in range(len(alphaArr)):
     alpha = alphaArr[j]
-    print('alpha: ', alpha)
-    predictedRes = np.zeros(xtest.shape[0])
-    for i in range(xtest.shape[0]):
-        featureVector = xtest[i]
-        predictedRes[i] = calcPosteriorProdictiveDist(alpha, naiveBayesClassifier, lambdaMl, featureVector)
-        #print('predicted: ', predictedRes[i])
-    predictedRes = predictedRes.astype(int)
-    ytest = ytest.flatten().astype(int)
-    errRate[j] = np.mean( predictedRes != ytest )
-    print(errRate[j])
+    print('alpha: ', 1)
+    logP = calcPosteriorProdictiveDist(xtrain, ytrain, xtrain, alpha)
+    # print('logP', logP)
+    err = getErrorRate(logP, ytrain)
+    print('trainErr', err)
+    trainErr[j] = err
 
-#%%
+    logP = calcPosteriorProdictiveDist(xtrain, ytrain, xtest, alpha)
+    err = getErrorRate(logP, ytest)
+    print('testErr', err)
+    testErr[j] = err
+
+# %%
 
 # Plot graph: alpha vs error rate
 plot.figure()
-plot.plot(alphaArr, errRate)
+plot.plot(alphaArr, trainErr)
 plot.title('Q1: Beta-binomial Naive Bayes')
 plot.xlabel('alpha')
-plot.ylabel('error rate')
+plot.ylabel('Error Rate')
 plot.show()
 
+
+# %%
