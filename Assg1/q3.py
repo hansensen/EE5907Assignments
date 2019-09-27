@@ -45,8 +45,6 @@ def getH(xtrainBias, wBold):
 # Newton's Method, get w to minimise NLL
 def newtonsMethod(xtestBias, xtrainBias, lam):
     # Get dimensions
-    # N: # of samples
-    N = len(xtrainBias)
     # D: # of features, xtrainBias has D + 1 columns due to bias term
     D = len(xtrainBias[0]) - 1
     # Initialisation, wBold is a (D+1) x 1 vector
@@ -93,21 +91,13 @@ testErr = np.zeros(len(lambdaArr))
 for i in range(len(lambdaArr)):
     lam = lambdaArr[i]
     wBold = newtonsMethod(xtestBias, xtrainBias, lam)
-    # # Training
+    # Training Set
     pSpam = sigmoid(xtrainBias.dot(wBold))
     trainErr[i] = (1 - np.sum((pSpam >= 0.5) == ytrain) / len(ytrain))
-    # Training
-    # prob_positive_label_train = (1 + np.exp(-xtrainBias.dot(wBold))) ** -1
-    # trainErr[i] = (1 - np.sum((pSpam >= 0.5)
-    #                           == ytrain) / len(ytrain)) * 100
 
-    # # Testing
+    # Test Set
     pSpam = sigmoid(xtestBias.dot(wBold))
     testErr[i] = (1 - np.sum((pSpam >= 0.5) == ytest) / len(ytest))
-    # Testing
-    # prob_positive_label_test = (1 + np.exp(-xtestBias.dot(wBold))) ** -1
-    # testErr[i] = (1 - np.sum((pSpam >= 0.5)
-    #                          == ytest) / len(ytest)) * 100
 
 # %%
 # Traing and testing error rates for alpha = 1, 10, 100
