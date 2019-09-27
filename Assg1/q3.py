@@ -1,3 +1,4 @@
+
 # %%
 import scipy.io as sio
 import numpy as np
@@ -89,17 +90,31 @@ lambdaArr = getLambda()
 trainErr = np.zeros(len(lambdaArr))
 testErr = np.zeros(len(lambdaArr))
 
-
 for i in range(len(lambdaArr)):
     lam = lambdaArr[i]
     wBold = newtonsMethod(xtestBias, xtrainBias, lam)
-    # Training
-    pSpam = -xtrainBias.dot(wBold)
+    # # Training
+    pSpam = sigmoid(xtrainBias.dot(wBold))
     trainErr[i] = (1 - np.sum((pSpam >= 0.5) == ytrain) / len(ytrain))
+    # Training
+    # prob_positive_label_train = (1 + np.exp(-xtrainBias.dot(wBold))) ** -1
+    # trainErr[i] = (1 - np.sum((pSpam >= 0.5)
+    #                           == ytrain) / len(ytrain)) * 100
 
-    # Testing
-    pSpam = sigmoid(-xtestBias.dot(wBold))
+    # # Testing
+    pSpam = sigmoid(xtestBias.dot(wBold))
     testErr[i] = (1 - np.sum((pSpam >= 0.5) == ytest) / len(ytest))
+    # Testing
+    # prob_positive_label_test = (1 + np.exp(-xtestBias.dot(wBold))) ** -1
+    # testErr[i] = (1 - np.sum((pSpam >= 0.5)
+    #                          == ytest) / len(ytest)) * 100
+
+# %%
+# Traing and testing error rates for alpha = 1, 10, 100
+for i in [0, 9, len(lambdaArr)-1]:
+    print('lambda =', int(lambdaArr[i]))
+    print('training error:', trainErr[i])
+    print('testing error:', testErr[i])
 
 
 # %%
@@ -110,3 +125,6 @@ plt.ylabel("error rate")
 plt.title("Q3. Logistic Regression")
 plt.legend()
 plt.show()
+
+
+# %%
