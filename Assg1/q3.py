@@ -56,8 +56,8 @@ def newtonsMethod(xtestBias, xtrainBias):
     margin = 1000
     # Deploy Newton's method to obtain optimal w
     while (margin > 0.01):
-        getG(xtrainBias, wBold)
-        getH(xtrainBias, wBold)
+        g = getG(xtrainBias, wBold)
+        h = getH(xtrainBias, wBold)
     return w
 
 
