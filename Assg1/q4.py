@@ -14,6 +14,31 @@ def getK():
     lambda2 = np.arange(15, 105, 5)
     return np.concatenate((lambda1, lambda2), axis=0)
 
+def getDistance(xtrain, x):
+    # dis is a NxM matrix
+    # N denotes the # of x samples
+    N  = x.shape[0]
+    #print(x.shape)
+    # M denotes the # of xtrain samples
+    M = xtrain.shape[0]
+    # print(x.shape)
+    dist = np.zeros((N, M))
+
+    # dist[i,j] is the distance between i-th sample in x
+    # and j-th sample in xtrain
+    for i in range(N):
+        for j in range(M):
+            dist[i,j] = np.linalg.norm(x[i] - xtrain[j])
+    
+    return dist
+
+# # %%
+# import numpy as np
+# a = np.array([[0,0,0,0]])
+# b = np.array([[1,1,1,1]])
+# # np.linalg.norm(a - b)
+# getDistance(a,b)
+
 # %%
 # Load data from spamData.mat
 xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
@@ -31,10 +56,13 @@ K = getK()
 trainErr = np.zeros(len(K))
 testErr = np.zeros(len(K))
 
+distanceTrain = getDistance(xtrain, xtrain)
+distanceTest = getDistance(xtrain, xtest)
+
 for i in range(len(K)):
     k = K[i]
     # Training Set
-
+    
     # Test Set
 
 # %%
