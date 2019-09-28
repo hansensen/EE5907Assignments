@@ -51,19 +51,29 @@ xtrainBias = np.concatenate((np.ones((numSample, 1)), xtrain), axis=1)
 numSample = xtest.shape[0]
 xtestBias = np.concatenate((np.ones((numSample, 1)), xtest), axis=1)
 
+distanceTrain = getDistance(xtrain, xtrain)
+distanceTest = getDistance(xtrain, xtest)
+
 K = getK()
 
 trainErr = np.zeros(len(K))
 testErr = np.zeros(len(K))
 
-distanceTrain = getDistance(xtrain, xtrain)
-distanceTest = getDistance(xtrain, xtest)
-
 for i in range(len(K)):
     k = K[i]
     # Training Set
-    
+    # find the k-nearest neighbors and get index array
+    kNearestNeighborIndexexTrain = np.argsort(distanceTrain)[:, 0:k]
+    # get the labels of k-nearest neighbors
+    kLabelsTrain = ytrain[kNearestNeighborIndexexTrain]
+
+
     # Test Set
+    # find the k-nearest neighbors and get index array
+    kNearestNeighborIndexexTest = np.argsort(distanceTest)[:, 0:k]
+    # get the labels of k-nearest neighbors
+    kLabelsTest = ytrain[kNearestNeighborIndexexTest]
+
 
 # %%
 # Traing and testing error rates for alpha = 1, 10, 100
