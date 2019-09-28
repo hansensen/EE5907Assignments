@@ -50,8 +50,8 @@ xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
 xtrain = np.log(xtrain + 0.1)
 xtest = np.log(xtest + 0.1)
 
-distanceTrain = getDistance(xtrain, xtrain)
-distanceTest = getDistance(xtrain, xtest)
+distanceTrain = np.argsort(getDistance(xtrain, xtrain))
+distanceTest = np.argsort(getDistance(xtrain, xtest))
 
 K = getK()
 
@@ -62,13 +62,13 @@ for i in range(len(K)):
     k = K[i]
     # Training Set
     # find the k-nearest neighbors and get index array
-    kNearestNeighborIndexexTrain = np.argsort(distanceTrain)[:, 0:k]
+    kNearestNeighborIndexexTrain = distanceTrain[:, 0:k]
     # get the labels of k-nearest neighbors
     kLabelsTrain = np.squeeze(ytrain[kNearestNeighborIndexexTrain], axis = -1)
 
     # Test Set
     # find the k-nearest neighbors and get index array
-    kNearestNeighborIndexexTest = np.argsort(distanceTest)[:, 0:k]
+    kNearestNeighborIndexexTest = distanceTest[:, 0:k]
     # get the labels of k-nearest neighbors
     kLabelsTest = np.squeeze(ytrain[kNearestNeighborIndexexTest], axis = -1)
 
