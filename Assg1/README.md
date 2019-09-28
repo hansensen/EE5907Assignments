@@ -51,6 +51,9 @@ This question asks to use generative module, naïve bayes classifier. The equati
 Since the email can only be classified as spam or non-spam, y can only be 0 or 1. In order to get ![p(\tilde{y} = 0 | \tilde{x}, D)](https://latex.codecogs.com/svg.latex?p(\tilde{y}%20=%200%20|%20\tilde{x},%20D)) and ![p(\tilde{y} = 1 | \tilde{x}, D)](https://latex.codecogs.com/svg.latex?p(\tilde{y}%20=%201%20|%20\tilde{x},%20D)), calculate first term and the sum of the following terms respectively.
 
 ## Results:
+STRIKE! IT IS TOO TROUBLESOME TO embed LaTeX formula into Markdown files...
+See PDF report for details...
+Send me email if you don't have the report :flushed:
 
 # Q2. Gaussian Naïve Bayes
 
