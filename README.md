@@ -3,4 +3,4 @@ Pattern Recognition Assignments
 
 ## Assignment 1 - Spam Email Classification :e-mail:
 
-## See details in assignment subfolders' README.md
+See more details in assignment subfolders' README.md
