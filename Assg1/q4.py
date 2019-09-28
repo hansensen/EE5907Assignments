@@ -21,7 +21,7 @@ def getDistance(xtrain, x):
     #print(x.shape)
     # M denotes the # of xtrain samples
     M = xtrain.shape[0]
-    # print(x.shape)
+    #print(x.shape)
     dist = np.zeros((N, M))
 
     # dist[i,j] is the distance between i-th sample in x
@@ -29,7 +29,6 @@ def getDistance(xtrain, x):
     for i in range(N):
         for j in range(M):
             dist[i,j] = np.linalg.norm(x[i] - xtrain[j])
-    
     return dist
 
 # # %%
@@ -39,17 +38,17 @@ def getDistance(xtrain, x):
 # # np.linalg.norm(a - b)
 # getDistance(a,b)
 
-# %%
+def getErrorRate(predictedRes, yActual):
+    predictedRes = predictedRes.astype(int)
+    yActual = yActual.flatten().astype(int)
+    return np.mean(predictedRes != yActual)
+
+
 # Load data from spamData.mat
 xtrain, ytrain, xtest, ytest = du.loadData('spamData.mat')
 # Log-transformation
 xtrain = np.log(xtrain + 0.1)
 xtest = np.log(xtest + 0.1)
-# Add bias term 1 to the start of x
-numSample = xtrain.shape[0]
-xtrainBias = np.concatenate((np.ones((numSample, 1)), xtrain), axis=1)
-numSample = xtest.shape[0]
-xtestBias = np.concatenate((np.ones((numSample, 1)), xtest), axis=1)
 
 distanceTrain = getDistance(xtrain, xtrain)
 distanceTest = getDistance(xtrain, xtest)
@@ -65,25 +64,37 @@ for i in range(len(K)):
     # find the k-nearest neighbors and get index array
     kNearestNeighborIndexexTrain = np.argsort(distanceTrain)[:, 0:k]
     # get the labels of k-nearest neighbors
-    kLabelsTrain = ytrain[kNearestNeighborIndexexTrain]
-
+    kLabelsTrain = np.squeeze(ytrain[kNearestNeighborIndexexTrain], axis = -1)
 
     # Test Set
     # find the k-nearest neighbors and get index array
     kNearestNeighborIndexexTest = np.argsort(distanceTest)[:, 0:k]
     # get the labels of k-nearest neighbors
-    kLabelsTest = ytrain[kNearestNeighborIndexexTest]
+    kLabelsTest = np.squeeze(ytrain[kNearestNeighborIndexexTest], axis = -1)
+
+    pTrain = np.zeros((2, len(xtrain)))
+    pTest = np.zeros((2, len(xtest)))
+    
+    # compute the prob of being labelled as 0 and 1 respectively
+    for j in [0,1]:
+        pTrain[j] = np.sum(kLabelsTrain == j , axis = 1) / k
+        pTest[j] = np.sum(kLabelsTest == j , axis = 1) / k
+
+    # get the class labels
+    predictedTrain = np.argmax(pTrain, axis = 0)
+    predictedTest = np.argmax(pTest, axis = 0)
+    
+    # get error rate
+    trainErr[i] = getErrorRate(predictedTrain, ytrain)
+    testErr[i] = getErrorRate(predictedTest, ytest)
 
 
-# %%
-# Traing and testing error rates for alpha = 1, 10, 100
-for i in [0, 9, len(K)-1]:
-    print('lambda =', int(K[i]))
-    print('training error:', trainErr[i])
-    print('testing error:', testErr[i])
+
+errRateTrain = getErrorRate(predictedTrain, ytrain)
+errRateTrain = getErrorRate(predictedTest, ytest)
 
 
-# %%
+
 plt.plot(K, trainErr, "green", label="Training Set")
 plt.plot(K, testErr, "red", label="Test Set")
 plt.xlabel("k")
@@ -94,3 +105,8 @@ plt.show()
 
 
 # %%
+# Traing and testing error rates for k = 1, 10, 100
+for i in [0, 9, len(K)-1]:
+    print('K =', int(K[i]))
+    print('training error:', trainErr[i])
+    print('testing error:', testErr[i])
