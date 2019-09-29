@@ -21,7 +21,6 @@ def getDistance(xtrain, x):
     #print(x.shape)
     # M denotes the # of xtrain samples
     M = xtrain.shape[0]
-    #print(x.shape)
     dist = np.zeros((N, M))
 
     # dist[i,j] is the distance between i-th sample in x
@@ -32,11 +31,6 @@ def getDistance(xtrain, x):
     return dist
 
 # # %%
-# import numpy as np
-# a = np.array([[0,0,0,0]])
-# b = np.array([[1,1,1,1]])
-# # np.linalg.norm(a - b)
-# getDistance(a,b)
 
 def getErrorRate(predictedRes, yActual):
     predictedRes = predictedRes.astype(int)
