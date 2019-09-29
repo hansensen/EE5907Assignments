@@ -24,11 +24,9 @@ xtest = np.log(xtest + 0.1)
 def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
     # Get ML Estimation of mu, variance and lambda
     lambdaMl = du.getLambdaML(ytrain)
-    # print('lambdaMl: ', lambdaMl)
 
     # Get an array of unique classes, C
     classes = [0, 1]
-    # print('classes: ', classes)
 
     # Init logP(y = c | x, D) array, index being c
     logP = []
@@ -51,9 +49,6 @@ def calcPosteriorProdictiveDist(xtrain, ytrain, xtest):
 
         # Get log of P(xTildej | xi <-c,j, yTilde = c)
         logPxTilde = np.log(sst.norm(mu, np.sqrt(var)).pdf(xtest))
-
-        # print('logP: ', logPyTildeI + np.sum(logPxTilde, axis = 1))
-        # print(logP)
 
         # Sum all the terms together
         logP.append(logPyTildeI + np.sum(logPxTilde, axis=1))
