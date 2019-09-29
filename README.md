@@ -1,7 +1,6 @@
-# EE5907
+# NUS EE5907
 Pattern Recognition Assignments
 
-## To conver a jupyter notebook file to python file, simple use
-```
-jupyter nbconvert --to script *.ipynb
-```
+## Assignment 1 - Spam Email Classification :e-mail:
+
+See more details in assignment subfolders' README.md
