@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 def calcPosteriorProdictiveDist(xtrain, ytrain, xtest, alpha):
     # Get ML Estimation of lambda
     lambdaMl = du.getLambdaML(ytrain)
-    # print('lambda', lambdaMl)
 
     # Get an array of unique classes, C
     classes = [0, 1]
@@ -30,23 +29,16 @@ def calcPosteriorProdictiveDist(xtrain, ytrain, xtest, alpha):
             logPyTildeI = np.log(lambdaMl)
         else:
             logPyTildeI = np.log(1 - lambdaMl)
-        # print('classes[i]', classes[i])
         # Following terms: sum of logP(xTildej | xi <-c,j, yTilde = c)
         ytrain = ytrain.flatten()
         # Find all x samples with y being labeled as class i
         xtrainClassI = xtrain[ytrain == classes[i]]
-        # print('x_label', xtrainClassI)
         # From xtrainClassI data, get their n1 and n respectively
         n1 = np.sum(xtrainClassI, axis=0)
         n = len(xtrainClassI)
-        # print('n1', n1.shape)
-        # print('n', n)
-        # print('alpha', alpha)
         posterior = (n1 + alpha)/(n + alpha + alpha)
-        # print('posterior', posterior)
         logPxTilde = np.log((xtest > 0) * posterior +
                             (xtest <= 0) * (1 - posterior))
-        # print('logPxTilde', logPxTilde)
 
         # Sum all the terms together
         logP.append(logPyTildeI + np.sum(logPxTilde, axis=1))
@@ -85,14 +77,14 @@ testErr = np.zeros(len(alphaArr))
 for j in range(len(alphaArr)):
     alpha = alphaArr[j]
     logP = calcPosteriorProdictiveDist(xtrain, ytrain, xtrain, alpha)
-    # print('logP', logP)
+
     err = getErrorRate(logP, ytrain)
-    # print('trainErr', err)
+
     trainErr[j] = err
 
     logP = calcPosteriorProdictiveDist(xtrain, ytrain, xtest, alpha)
     err = getErrorRate(logP, ytest)
-    # print('testErr', err)
+
     testErr[j] = err
 
 
