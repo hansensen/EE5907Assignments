@@ -1,0 +1,231 @@
+\section*{1. PCA for Feature Extraction, Visualization and Classification}
+\noindent Text. Commentary on the approach to solving the exercise, theoretical derivation if the assignment asks for it.
+
+Text. Paragraphs are separated by an empty line. 
+
+\subsection*{Implementation in R}
+\begin{lstlisting}
+functions in  R ...
+## function for calculating basic characteristics
+basicchar <- function(x){
+  v1 <- c(length(x), round(mean(x),2), round(sd(x),2))
+  return(v1)
+}
+# calculating basic characteristics of women and of men
+women <- basicchar(data$skull.height[data$sex == 'F'])
+men <- basicchar(data$skull.height[data$sex == 'M'])
+tab <- rbind(women, men)
+# plotting boxplots
+boxplot(data$skull.height[data$sex == 'F'], 
+        data$skull.height[data$sex == 'M'],
+        col = "steelblue", 
+        xlab = "",
+        ylab = "Skull Height (mm)",
+        xaxt = "n", 
+        boxwex = 0.5)
+axis(1, at = 1:2, labels = c("women","men"))
+# adding averages
+points(tab[,2], col = "red", pch = 16)
+\end{lstlisting}
+
+You will submit your complete code in an \textsf{.R} file or an \textsf{.Rnw} file according to the instructions for the assignments. Only required functions or parts of code crucial to the exercise will be inserted here.
+\bigskip
+\subsection*{Results and interpretation}
+\noindent Text. Results in table or graphic form. Commentaries and interpretation of the results.
+
+ Interpretation. Text. Commentary relating to tables and figures. What can we infere about the differences in skull height between men and women from the values in the table? How can we know from the figure, whether our data come from a normal distribution?
+
+\begin{table}[ht]
+\footnotesize
+\centering
+
+\begin{tabular}{r||rrr}
+ Gender & Number of individuals & Average skull height (mm) & Standard deviation \\ 
+ \hline \hline
+Women & 20 & 127.70 & 6.86 \\ 
+Men & 40 & 135.54 & 5.20 \\ 
+\end{tabular}
+\caption{Basic characteristics of skull height of women and of men}
+\end{table}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[angle=0,width=0.45\textwidth]{boxplot-example.pdf}
+\caption{Boxplots of skull height of women and of men}
+\end{figure}
+
+\newpage
+
+\section*{2. LDA for Feature Extraction and Classification}
+\noindent Text. Commentary on the approach to solving the exercise, theoretical derivation if the assignment asks for it.
+
+Text. Paragraphs are separated by an empty line. 
+
+\subsection*{Implementation in R}
+\begin{lstlisting}
+functions in  R ...
+## function for calculating basic characteristics
+basicchar <- function(x){
+  v1 <- c(length(x), round(mean(x),2), round(sd(x),2))
+  return(v1)
+}
+# calculating basic characteristics of women and of men
+women <- basicchar(data$skull.height[data$sex == 'F'])
+men <- basicchar(data$skull.height[data$sex == 'M'])
+tab <- rbind(women, men)
+# plotting boxplots
+boxplot(data$skull.height[data$sex == 'F'], 
+        data$skull.height[data$sex == 'M'],
+        col = "steelblue", 
+        xlab = "",
+        ylab = "Skull Height (mm)",
+        xaxt = "n", 
+        boxwex = 0.5)
+axis(1, at = 1:2, labels = c("women","men"))
+# adding averages
+points(tab[,2], col = "red", pch = 16)
+\end{lstlisting}
+
+You will submit your complete code in an \textsf{.R} file or an \textsf{.Rnw} file according to the instructions for the assignments. Only required functions or parts of code crucial to the exercise will be inserted here.
+\bigskip
+\subsection*{Results and interpretation}
+\noindent Text. Results in table or graphic form. Commentaries and interpretation of the results.
+
+ Interpretation. Text. Commentary relating to tables and figures. What can we infere about the differences in skull height between men and women from the values in the table? How can we know from the figure, whether our data come from a normal distribution?
+
+\begin{table}[ht]
+\footnotesize
+\centering
+
+\begin{tabular}{r||rrr}
+ Gender & Number of individuals & Average skull height (mm) & Standard deviation \\ 
+ \hline \hline
+Women & 20 & 127.70 & 6.86 \\ 
+Men & 40 & 135.54 & 5.20 \\ 
+\end{tabular}
+\caption{Basic characteristics of skull height of women and of men}
+\end{table}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[angle=0,width=0.45\textwidth]{boxplot-example.pdf}
+\caption{Boxplots of skull height of women and of men}
+\end{figure}
+
+\section*{3. SVM for Classification}
+\noindent Text. Commentary on the approach to solving the exercise, theoretical derivation if the assignment asks for it.
+
+Text. Paragraphs are separated by an empty line. 
+
+\subsection*{Implementation in R}
+\begin{lstlisting}
+functions in  R ...
+## function for calculating basic characteristics
+basicchar <- function(x){
+  v1 <- c(length(x), round(mean(x),2), round(sd(x),2))
+  return(v1)
+}
+# calculating basic characteristics of women and of men
+women <- basicchar(data$skull.height[data$sex == 'F'])
+men <- basicchar(data$skull.height[data$sex == 'M'])
+tab <- rbind(women, men)
+# plotting boxplots
+boxplot(data$skull.height[data$sex == 'F'], 
+        data$skull.height[data$sex == 'M'],
+        col = "steelblue", 
+        xlab = "",
+        ylab = "Skull Height (mm)",
+        xaxt = "n", 
+        boxwex = 0.5)
+axis(1, at = 1:2, labels = c("women","men"))
+# adding averages
+points(tab[,2], col = "red", pch = 16)
+\end{lstlisting}
+
+You will submit your complete code in an \textsf{.R} file or an \textsf{.Rnw} file according to the instructions for the assignments. Only required functions or parts of code crucial to the exercise will be inserted here.
+\bigskip
+\subsection*{Results and interpretation}
+\noindent Text. Results in table or graphic form. Commentaries and interpretation of the results.
+
+ Interpretation. Text. Commentary relating to tables and figures. What can we infere about the differences in skull height between men and women from the values in the table? How can we know from the figure, whether our data come from a normal distribution?
+
+\begin{table}[ht]
+\footnotesize
+\centering
+
+\begin{tabular}{r||rrr}
+ Gender & Number of individuals & Average skull height (mm) & Standard deviation \\ 
+ \hline \hline
+Women & 20 & 127.70 & 6.86 \\ 
+Men & 40 & 135.54 & 5.20 \\ 
+\end{tabular}
+\caption{Basic characteristics of skull height of women and of men}
+\end{table}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[angle=0,width=0.45\textwidth]{boxplot-example.pdf}
+\caption{Boxplots of skull height of women and of men}
+\end{figure}
+
+\newpage
+
+\section*{4. Neural Networks}
+\noindent Text. Commentary on the approach to solving the exercise, theoretical derivation if the assignment asks for it.
+
+Text. Paragraphs are separated by an empty line. 
+
+\subsection*{Implementation in R}
+\begin{lstlisting}
+functions in  R ...
+## function for calculating basic characteristics
+basicchar <- function(x){
+  v1 <- c(length(x), round(mean(x),2), round(sd(x),2))
+  return(v1)
+}
+# calculating basic characteristics of women and of men
+women <- basicchar(data$skull.height[data$sex == 'F'])
+men <- basicchar(data$skull.height[data$sex == 'M'])
+tab <- rbind(women, men)
+# plotting boxplots
+boxplot(data$skull.height[data$sex == 'F'], 
+        data$skull.height[data$sex == 'M'],
+        col = "steelblue", 
+        xlab = "",
+        ylab = "Skull Height (mm)",
+        xaxt = "n", 
+        boxwex = 0.5)
+axis(1, at = 1:2, labels = c("women","men"))
+# adding averages
+points(tab[,2], col = "red", pch = 16)
+\end{lstlisting}
+
+You will submit your complete code in an \textsf{.R} file or an \textsf{.Rnw} file according to the instructions for the assignments. Only required functions or parts of code crucial to the exercise will be inserted here.
+\bigskip
+\subsection*{Results and interpretation}
+\noindent Text. Results in table or graphic form. Commentaries and interpretation of the results.
+
+ Interpretation. Text. Commentary relating to tables and figures. What can we infere about the differences in skull height between men and women from the values in the table? How can we know from the figure, whether our data come from a normal distribution?
+
+\begin{table}[ht]
+\footnotesize
+\centering
+
+\begin{tabular}{r||rrr}
+ Gender & Number of individuals & Average skull height (mm) & Standard deviation \\ 
+ \hline \hline
+Women & 20 & 127.70 & 6.86 \\ 
+Men & 40 & 135.54 & 5.20 \\ 
+\end{tabular}
+\caption{Basic characteristics of skull height of women and of men}
+\end{table}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[angle=0,width=0.45\textwidth]{boxplot-example.pdf}
+\caption{Boxplots of skull height of women and of men}
+\end{figure}
