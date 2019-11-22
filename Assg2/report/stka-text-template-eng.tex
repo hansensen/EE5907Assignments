@@ -1,11 +1,54 @@
-\section*{1. PCA for Feature Extraction, Visualization and Classification}
-\noindent Text. Commentary on the approach to solving the exercise, theoretical derivation if the assignment asks for it.
+\section*{Introduction}
+\noindent This assignment is a practice to solve face recognition problem using different pattern recognition methods. In first two parts, \textit{Principal Component Analysis} (PCA) and \textit{Linear Discriminant Analysis} (LDA) are used to reduced the dimensionality of the data, followed by \textit{k-Nearest Neighbors} (KNN), first nearest neighbor in this assignment, to classify the faces. The last two parts are to use \textit{Support Vector Machine} (SVM) and \textit{Convolutional Neural Network} (CNN) to classify the faces.
 
-Text. Paragraphs are separated by an empty line. 
+\section*{Dataset}
+\noindent The project will be conducted on the \textit{CMU PIE dataset2} and 10 selfie images. There are in total 68 different subjects plus one selfie. The training process is based on 70\% of 20 randomly selected subjects and 7 self-taking images while test is based on 30\% of the randomly selected subjects and 3 self-taking images. Due to the relatively small training and test size for self-taking images, the classification accuracy for self-taking images are quite low, yet the overall accuracy is satisfying enough with such simple methods.
 
-\subsection*{Implementation in R}
+\section*{PCA for Feature Extraction, Visualization and Classification}
+\noindent The size of raw face image is 32$\times$32 pixels, resulting in a 1024 dimensional vector for each image. However, images may not be accurately classified because of the curse dimentionality with the classification method (KNN) we used. In this case, it is necessary to reduce the dimension of the data before passing to the classification model. PCA is a classic unsupervised dimension reduction method. 
+
+The basic idea of PCA is to find a new sets of eigenvectors and eigenvalues to represent the data with minimal data loss. Then the new data is reconstructed based on the eignevectors.
+
+\vspace{5mm}
+\noindent \textbf{Steps:}\hfill \break
+1. Compute the covariance matrix;\hfill \break
+2. Perform eigenvalue decomposition;\hfill \break
+3. Output PCs matrix.\hfill \break
+\vspace{5mm}
+
+Let $\{ \vec{x}_i \}$ be a set of $N$ column vectors of dimension $D$ ($D=1024$).
+Define the covariance matrix ${\bf \rm S}_x$ of the dataset as
+$$
+	{\bf \rm S}_x = \frac{1}{N} \sum^N_{i=1} ( x_i - \bar{x} )( x_i - \bar{x} )^{T}
+$$
+where $\bar{x}$ is the mean of the dataset:
+$$
+	\bar{x} = \frac{1}{N} \sum^N_{i=1} x_i
+$$
+
+The $d$ largest principle components are the eigenvectors
+$\vec{w}_i$ corresponding to the $d$ largest eigenvalues. The eigenvectors of {\bf S} can usually be found by using 
+singular value decomposition. The $d$ eigenvectors can also be used to project the data into a
+$d$ dimensional space.
+Define
+$$
+{\bf \rm W} = [\vec{\mu}_1, \vec{\mu}_2, \dots, \vec{\mu}_d ]
+$$
+The projection of vector $\vec{x}$ is $\vec{y} = {\bf \rm W}^T \vec{x}$.
+The corresponding scatter matrix ${\bf \rm S}_y$ of the
+vectors $\{ \vec{y}_i \}$ is:
+$$
+{\bf \rm S}_y = {\bf \rm W}^T {\bf \rm S}_x {\bf \rm W}
+$$
+
+When the image data's dimension is reduced to 2, it can be visualized in a 2D plane.
+When the image data's dimension is reduced to 3, it can be visualized in a 3D space.
+
+By choosing the first 3 eigenvectors, the first 3 eigenfaces can be plotted as follows.
+
+\subsection*{Implementation in Python}
 \begin{lstlisting}
-functions in  R ...
+functions in  Python ...
 ## function for calculating basic characteristics
 basicchar <- function(x){
   v1 <- c(length(x), round(mean(x),2), round(sd(x),2))
