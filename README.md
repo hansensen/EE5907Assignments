@@ -2,5 +2,4 @@
 Pattern Recognition Assignments
 
 ## Assignment 1 - Spam Email Classification :e-mail:
-
-See more details in assignment subfolders' README.md
+## Assignment 2 - Face Recognition :see_no_evil:
